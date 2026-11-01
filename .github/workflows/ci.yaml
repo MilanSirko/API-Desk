@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: Syntax and project checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+
+      - name: Check Python syntax
+        run: python -m compileall -q backend.py tests
+
+      - name: Run project structure checks
+        run: python -m unittest discover -s tests -v
+
+      - name: Check JavaScript syntax
+        run: |
+          node --check backend.js
+          node --check website/app.js
+
+      - name: Check Vercel configuration JSON
+        run: python -m json.tool vercel.json > /dev/null

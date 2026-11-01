@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta name="description" content="Learn how to use Request settings — APIDesk Docs in APIDesk." />
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#101012" />
+        <link rel="icon" type="image/png" href="../assets/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon/favicon.svg" />
+    <link rel="shortcut icon" href="../assets/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="API Desk" />
+    <link rel="manifest" href="../assets/favicon/site.webmanifest" />
+<title>Request Settings - APIDesk Docs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../docs.css" />
+      <link rel="canonical" href="https://www.apidesk.com/docs/settings.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="APIDesk" />
+    <meta property="og:title" content="Request Settings - APIDesk Docs" />
+    <meta property="og:description" content="Learn about request timeouts, redirects, retries, and other settings." />
+    <meta property="og:url" content="https://www.apidesk.com/docs/settings.html" />
+    <meta property="og:image" content="https://www.apidesk.com/assets/brand/opengraphimage.png" />
+    <meta property="og:image:secure_url" content="https://www.apidesk.com/assets/brand/opengraphimage.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="APIDesk ? Build and test API requests" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Request Settings - APIDesk Docs" />
+    <meta name="twitter:description" content="Learn about request timeouts, redirects, retries, and other settings." />
+    <meta name="twitter:image" content="https://www.apidesk.com/assets/brand/opengraphimage.png" />
+</head>
+  <body>
+    <header class="docs-header">
+      <a class="brand" href="../index.html" aria-label="APIDesk home"><img class="brand-logo" src="../assets/brand/___2_-removebg-preview.png" alt="APIDesk logo" /><span>api<span class="brand-light">desk</span></span></a>
+      <nav class="site-nav" aria-label="Main navigation"><a class="nav-link" href="../index.html">Home</a><a class="nav-link active" href="../docs.html">Docs</a></nav>
+      <div class="header-actions">
+        <a class="button button-quiet" href="https://github.com/" target="_blank" rel="noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .9a11.1 11.1 0 0 0-3.51 21.63c.55.1.76-.24.76-.53v-2.08c-3.1.67-3.76-1.32-3.76-1.32-.5-1.28-1.24-1.62-1.24-1.62-1.01-.69.08-.68.08-.68 1.12.08 1.71 1.15 1.71 1.15 1 .1.48 2.18 3.1 1.55.1-.72.4-1.21.72-1.49-2.47-.28-5.07-1.24-5.07-5.51 0-1.22.44-2.21 1.15-2.99-.12-.28-.5-1.42.11-2.95 0 0 .94-.3 3.05 1.14a10.6 10.6 0 0 1 5.55 0c2.11-1.44 3.05-1.14 3.05-1.14.61 1.53.23 2.67.11 2.95.72.78 1.15 1.77 1.15 2.99 0 4.28-2.6 5.22-5.08 5.5.4.35.76 1.02.76 2.06V22c0 .29.2.63.77.52A11.1 11.1 0 0 0 12 .9Z"/></svg>GitHub</a>
+        <a class="button button-light" href="../api-tester.html">Go to workspace <span aria-hidden="true">↗</span></a>
+      </div>
+    </header>
+
+    <div class="docs-layout">
+      <aside class="docs-sidebar">
+        <div class="sidebar-label">GETTING STARTED</div>
+        <nav aria-label="Getting started">
+          <a href="../docs.html#what-is-apidesk">What is APIDesk?</a>
+          <a href="../docs.html#first-request">Your first request</a>
+          <a href="../docs.html#workspace-guide">Workspace guide</a>
+        </nav>
+
+        <div class="sidebar-label sidebar-label-spaced">MAKING A REQUEST</div>
+        <nav aria-label="Making a request">
+          <a href="methods.html">Methods</a>
+          <a href="params.html">Params</a>
+          <a href="headers.html">Headers</a>
+          <a href="body.html">Body</a>
+          <a href="auth.html">Auth</a>
+          <a class="active" href="settings.html">Settings</a>
+        </nav>
+
+        <div class="sidebar-label sidebar-label-spaced">READING THE RESPONSE</div>
+        <nav aria-label="Reading the response">
+          <a href="response-body.html">Body</a>
+          <a href="response-headers.html">Headers</a>
+          <a href="cookies.html">Cookies</a>
+          <a href="stats.html">Stats</a>
+          <a href="logs.html">Logs</a>
+        </nav>
+
+        <div class="sidebar-label sidebar-label-spaced">COLLECTIONS AND FOLDERS</div>
+        <nav aria-label="Collections and folders">
+          <a href="collections/difference.html">Collections vs folders</a>
+          <a href="collections/manage.html">Create, rename and delete</a>
+          <a href="collections/shared-settings.html">Shared settings</a>
+          <a href="collections/import-export.html">Import and export</a>
+          <a href="collections/save-copy.html">Save and copy requests</a>
+        </nav>
+      </aside>
+
+      <main class="docs-content">
+        <div class="breadcrumbs"><a href="../docs.html">Docs</a><span>/</span><span>Making a request</span><span>/</span><span>Settings</span></div>
+        <header class="page-heading">
+          <div class="eyebrow">MAKING A REQUEST</div>
+          <h1>Request settings</h1>
+          <p>Control how the request behaves when the API is slow, redirects, or returns transient server errors.</p>
+        </header>
+
+        <section class="doc-section">
+          <h2>Timeout</h2>
+          <p>The request timeout controls how long the client waits before aborting the request. The default is <strong>30000 ms</strong> (30 seconds).</p>
+          <p>Use a shorter timeout for fast-failing calls, or a longer one for slower APIs.</p>
+
+          <h2 class="subheading">Retry count</h2>
+          <p>Retry count defines how many times APIDesk retry the request after a retryable failure. The default is <strong>0</strong>, and the maximum value in the UI is <strong>5</strong>.</p>
+          <p>Retries are only used for safe, idempotent request types and only for specific failures.</p>
+
+          <h2 class="subheading">Retry delay</h2>
+          <p>The delay between retries is configured in milliseconds. The default is <strong>500 ms</strong>, and the minimum is <strong>0</strong>.</p>
+          <p>Use this to avoid hammering an API that is temporarily failing or overloaded.</p>
+
+          <h2 class="subheading">Follow redirects</h2>
+          <p>When enabled, the browser follows HTTP redirect responses automatically. This option is checked by default.</p>
+          <p>Disable it if you want to inspect the redirect chain or avoid automatic navigation between endpoints.</p>
+
+          <h2 class="subheading">Max response</h2>
+          <p>Max response limits how large a response body the client accepts before stopping. The default is <strong>10 MB</strong>, and the upper limit in the UI is <strong>1024 MB</strong>.</p>
+          <p>This helps prevent large downloads from consuming too much memory or making the workspace unusable.</p>
+
+          <div class="callout">
+            <span class="callout-icon">i</span>
+            <p><strong>Retry rule:</strong> APIDesk retries only for methods <code>GET</code>, <code>HEAD</code>, <code>OPTIONS</code>, <code>PUT</code>, and <code>DELETE</code>. It retries only when the response status is <code>502</code>, <code>503</code>, or <code>504</code>, or when there is a network failure.</p>
+          </div>
+
+          <h2>Default values at a glance</h2>
+          <div class="header-examples">
+            <article><code>Timeout</code><p>Default: 30000 ms</p></article>
+            <article><code>Retry count</code><p>Default: 0, max: 5</p></article>
+            <article><code>Retry delay</code><p>Default: 500 ms, min: 0</p></article>
+            <article><code>Follow redirects</code><p>Default: enabled</p></article>
+            <article><code>Max response</code><p>Default: 10 MB, max: 1024 MB</p></article>
+          </div>
+
+          <img class="doc-image doc-screenshot" src="../assets/images/settings%20request.png" alt="a screenshot of the request Settings panel" loading="lazy" />
+        </section>
+
+        <div class="page-pagination">
+          <a href="auth.html"><small>PREVIOUS</small><strong>← Auth</strong></a>
+          <a href="../docs.html#workspace-guide"><small>UP NEXT</small><strong>Workspace guide →</strong></a>
+        </div>
+      </main>
+    </div>
+      <footer class="site-footer section-wrap">
+      <a class="brand footer-brand" href="../index.html" aria-label="APIDesk home"><img class="brand-logo" src="../assets/brand/___2_-removebg-preview.png" alt="APIDesk logo" /><span>api<span class="brand-light">desk</span></span></a>
+      <span class="footer-copy">A browser based API workspace.</span>
+      <nav aria-label="Footer navigation">
+        <a href="../index.html">Home</a>
+        <a href="../docs.html">Docs</a>
+        <a href="../faq.html">FAQ</a>
+        <a href="../api-tester.html">Workspace</a>
+      </nav>
+    </footer>
+  </body>
+</html>

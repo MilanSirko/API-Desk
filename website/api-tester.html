@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta name="description" content="Build and send HTTP API requests in the APIDesk workspace." />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#18181a" />
+        <link rel="icon" type="image/png" href="assets/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="assets/favicon/favicon.svg" />
+    <link rel="shortcut icon" href="assets/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="API Desk" />
+    <link rel="manifest" href="assets/favicon/site.webmanifest" />
+<title>APIDesk Workspace</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="index.html" aria-label="APIDesk home">
+        <img class="brand-logo" src="assets/brand/___2_-removebg-preview.png" alt="APIDesk logo" /><span>api<span class="brand-light">desk</span></span><span class="workspace-chip">WORKSPACE</span>
+      </a>
+      <div class="top-actions">
+        <a class="login-button home-button" href="index.html">Home</a>
+        <span class="local-badge"><i></i> Local workspace</span>
+        <button class="login-button account-settings-button hidden" id="accountSettingsBtn" type="button">Settings</button>
+        <button class="login-button" id="loginBtn">Log in</button>
+      </div>
+    </header>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="sidebar-content">
+          <div class="side-heading"><span>COLLECTION</span><div class="side-heading-actions"><button class="collection-export-button" id="exportCollections" type="button">Export</button><button class="collection-export-button" id="importOpenApi" type="button">Import</button><button class="icon-button small" id="createCollection" title="New collection" aria-label="New collection">+</button></div></div>
+        <div id="collectionList" class="folder-list"></div>
+        <button class="collection-row active" id="allRequests"><span class="collection-icon">▦</span> All requests <span class="count" id="requestCount">0</span></button>
+        <div class="side-section-heading"><span>FOLDERS</span><button class="icon-button small" id="newFolder" title="New folder" aria-label="New folder">+</button></div>
+        <div id="folderList" class="folder-list"></div>
+          <div class="side-section-heading"><span>SAVED REQUESTS</span></div>
+        <div id="requestList" class="request-list"></div>
+        </div>
+        <div class="sidebar-bottom">
+          <a class="sidebar-brand" href="index.html" aria-label="APIDesk home">
+            <img class="sidebar-brand-logo" src="assets/brand/___2_-removebg-preview.png" alt="" />
+            <b>APIDesk</b>
+          </a>
+        </div>
+      </aside>
+      <main class="main-area">
+        <div class="breadcrumb">
+          <span>API Workspace</span><span class="crumb-slash">/</span
+          ><b id="crumbName">New request</b><span class="spacer"></span
+          ><div class="save-actions"><button class="text-button save-button" id="saveRequest">Save</button><button class="text-button save-folder-button" id="saveToFolder">Save to folder</button></div>
+        </div>
+        <section class="request-section">
+          <div class="request-title">
+            <div>
+              <div class="eyebrow">
+                HTTP CLIENT <span class="eyebrow-line"></span>
+              </div>
+              <h1 id="requestTitle">Build a request</h1>
+              <p>Configure and send a request to your API.</p>
+            </div>
+            <span class="secure-note"
+              >⌁ &nbsp;Requests are sent directly from your browser</span
+            >
+          </div>
+          <div class="request-bar">
+            <select id="method" aria-label="HTTP method">
+              <option value="GET" class="option-GET">GET</option>
+              <option value="POST" class="option-POST">POST</option>
+              <option value="PUT" class="option-PUT">PUT</option>
+              <option value="PATCH" class="option-PATCH">PATCH</option>
+              <option value="DELETE" class="option-DELETE">DELETE</option>
+              <option value="HEAD" class="option-HEAD">HEAD</option>
+              <option value="OPTIONS" class="option-OPTIONS">OPTIONS</option></select
+            ><input
+              id="url"
+              placeholder="https://api.example.com/endpoint"
+              spellcheck="false"
+              aria-label="Request URL"
+            /><button class="send-button" id="send"><span>➤</span> Send</button>
+          </div>
+          <nav
+            class="request-tabs"
+            id="requestTabs"
+            aria-label="Request settings"
+          >
+            <button class="tab active" data-pane="params">
+              Params <span class="tab-count" id="paramCount"></span></button
+            ><button class="tab" data-pane="headers">
+              Headers <span class="tab-count" id="headerCount"></span></button
+            ><button class="tab" data-pane="body">Body</button
+            ><button class="tab" data-pane="auth">Auth</button
+            ><button class="tab" data-pane="settings">Settings</button>
+          </nav>
+          <div class="request-panel" id="pane-params">
+            <div class="panel-caption">
+              <div>
+                <b>Query parameters</b
+                ><small>Key-value pairs appended to the URL</small>
+              </div>
+              <button class="outline-button" data-add-row="params">
+                ＋ Add parameter
+              </button>
+            </div>
+            <div id="paramsRows" class="key-value-list"></div>
+          </div>
+          <div class="request-panel hidden" id="pane-headers">
+            <div class="panel-caption">
+              <div>
+                <b>Request headers</b><small>Add custom HTTP headers</small>
+              </div>
+              <div class="header-tools">
+                <button class="outline-button" data-add-row="headers">+ Add header</button>
+                <select class="common-header-select" id="commonHeaderSelect" aria-label="Add a common header">
+                  <option value="">Common headers...</option>
+                  <option value="accept-json">Accept: application/json</option>
+                  <option value="content-json">Content-Type: application/json</option>
+                  <option value="authorization-bearer">Authorization: Bearer</option>
+                  <option value="cache-control">Cache-Control: no-cache</option>
+                  <option value="accept-language">Accept-Language: en-US</option>
+                  <option value="x-requested-with">X-Requested-With: XMLHttpRequest</option>
+                </select>
+              </div>
+            </div>
+            <div id="headersRows" class="key-value-list"></div>
+          </div>
+          <div class="request-panel hidden" id="pane-body">
+            <div class="panel-caption">
+              <div>
+                <b>Request body</b
+                ><small>Use a body with POST, PUT, and PATCH requests</small>
+              </div>
+              <select id="bodyType" class="mini-select">
+                <option value="json">JSON</option>
+                <option value="form-data">form-data</option>
+                <option value="urlencoded">x-www-form-urlencoded</option>
+                <option value="raw">raw</option>
+                <option value="graphql">GraphQL</option>
+              </select>
+            </div>
+            <textarea
+              id="body"
+              class="code-editor"
+              spellcheck="false"
+              placeholder="Enter request body"
+            ></textarea>
+          </div>
+          <div class="request-panel hidden" id="pane-auth">
+            <div class="panel-caption">
+              <div>
+                <b>Authorization</b
+                ><small>Credentials are added to the request header</small>
+              </div>
+            </div>
+            <div class="auth-fields">
+              <label
+                >Type<select id="authType">
+                  <option value="none">No auth</option>
+                  <option value="bearer">Bearer token</option>
+                  <option value="basic">Basic Auth</option>
+                  <option value="apikey">API key</option>
+                </select></label
+              ><label id="authValueWrap" class="hidden"
+                >Token / value<input
+                  id="authValue"
+                  type="password"
+                  placeholder="Enter token" /></label
+              ><label id="authUserWrap" class="hidden"
+                >Username<input id="authUser" placeholder="Username" /></label
+              ><label id="authPassWrap" class="hidden"
+                >Password<input
+                  id="authPass"
+                  type="password"
+                  placeholder="Password" /></label
+              ><label id="authKeyWrap" class="hidden"
+                >Header name<input id="authKey" value="X-API-Key"
+              /></label>
+            </div>
+          </div>
+          <div class="request-panel hidden" id="pane-settings">
+            <div class="panel-caption">
+              <div>
+                <b>Request settings</b>
+                <small>Set a timeout and control browser-managed cookies</small>
+              </div>
+            </div>
+            <div class="auth-fields">
+              <label>Timeout (ms)<input id="timeoutMs" type="number" min="0" step="1000" value="30000" aria-label="Timeout in milliseconds"></label>
+              <label>Send cookies<select id="credentialsMode"><option value="same-origin">Same-origin only</option><option value="include">Include for all origins</option><option value="omit">Never</option></select></label>
+              <label class="setting-check"><input id="followRedirects" type="checkbox" checked> Follow redirects</label>
+              <label>Max response (MB)<input id="maxResponseMb" type="number" min="1" max="1024" step="1" value="10"></label>
+              <label>Retry count<input id="retryCount" type="number" min="0" max="5" step="1" value="0"></label>
+              <label>Retry delay (ms)<input id="retryDelay" type="number" min="0" step="100" value="500"></label>
+            </div>
+            <div class="global-headers">
+              <label for="globalHeaders">Global headers <small>One per line, format: Header-Name: value. Applied to every request.</small></label>
+              <textarea id="globalHeaders" rows="3" spellcheck="false" placeholder="X-Workspace: demo&#10;Accept: application/json"></textarea>
+            </div>
+            <p class="settings-note">APIDesk keeps an API cookie jar for this browser session. Cookies are matched by domain and path. Choose “Include for all origins” to store and send cookies for external APIs.</p>
+          </div>
+        </section>
+        <section class="response-section">
+          <div class="response-heading">
+            <div>
+              <div class="eyebrow">
+                RESPONSE <span class="eyebrow-line"></span>
+              </div>
+              <h2>Response</h2>
+            </div>
+            <div class="response-tools hidden" id="responseTools">
+              <button class="outline-button" id="copyResponse">
+                ▣ &nbsp;Copy</button
+              ><button class="outline-button" id="downloadResponse">
+                ↓ &nbsp;Download
+              </button>
+            </div>
+          </div>
+          <div class="response-card">
+            <div class="response-toolbar">
+              <nav class="response-tabs" id="responseTabs">
+                <button class="tab active" data-view="body">Body</button
+                ><button class="tab" data-view="headers">Headers</button
+                ><button class="tab" data-view="cookies">Cookies</button
+                ><button class="tab" data-view="stats">Stats</button
+                ><button class="tab" id="logsTab" data-view="logs">Logs</button>
+              </nav>
+              <div class="response-toolbar-right"><div class="response-meta hidden" id="responseMeta"></div></div>
+            </div>
+            <div class="body-controls hidden" id="bodyControls">
+              <div class="body-view-switch" aria-label="Response body view">
+                <button class="body-mode active" data-body-mode="pretty">Pretty</button>
+                <button class="body-mode" data-body-mode="raw">Raw</button>
+                <button class="body-mode" data-body-mode="preview">Preview</button>
+              </div>
+              <label class="response-filter">Search JSON<input id="jsonSearch" type="search" placeholder="Search keys or values"></label>
+              <label class="response-filter jsonpath-filter">JSONPath<input id="jsonPath" type="text" placeholder="$.data[*].id"></label>
+              <button class="outline-button" id="applyJsonPath">Filter</button>
+            </div>
+            <div id="responseContent" class="response-content">
+              <div class="empty-state">
+                <span class="empty-icon">↗</span><b>No response yet</b>
+                <p>
+                  Send a request to see the response details and statistics
+                  here.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+        <footer class="footer-note">
+          <span>APIDesk <span class="muted">- Frontend API client</span></span
+          ><span id="historySummary">History is stored in this browser</span>
+        </footer>
+      </main>
+    </div>
+    <div class="toast" id="toast" role="status"></div>
+    <div class="auth-overlay hidden" id="authOverlay" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+      <section class="auth-dialog">
+        <button class="auth-close" id="authClose" aria-label="Close">×</button>
+        <div class="auth-brand"><img class="brand-logo" src="assets/brand/___2_-removebg-preview.png" alt="APIDesk logo" /><span>api<span class="brand-light">desk</span></span></div>
+        <h2 id="authTitle">Welcome back</h2>
+        <p class="auth-subtitle" id="authSubtitle">Log in to your APIDesk account</p>
+        <div class="auth-switch"><button class="auth-mode active" data-auth-mode="login">Log in</button><button class="auth-mode" data-auth-mode="register">Register</button></div>
+        <form id="authForm">
+          <label class="auth-input-label">Email address<input id="loginEmail" type="email" autocomplete="email" placeholder="you@example.com" required></label>
+          <label class="auth-input-label">Password<input id="loginPassword" type="password" autocomplete="current-password" placeholder="Enter your password" minlength="8" required></label>
+          <label class="auth-input-label hidden" id="confirmPasswordWrap">Confirm password<input id="confirmPassword" type="password" autocomplete="new-password" placeholder="Enter your password again" minlength="8"></label>
+          <label class="auth-legal hidden" id="legalAcceptanceWrap"><input id="acceptLegal" type="checkbox"><span>I agree to the <a href="privacy-policy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a> and <a href="terms-of-service.html" target="_blank" rel="noopener noreferrer">Terms of Service</a>.</span></label>
+          <button class="auth-submit" type="submit" id="authSubmit">Log in</button>
+        </form>
+        <div class="oauth-options" id="oauthOptions">
+          <div class="auth-divider">or continue with</div>
+          <button class="oauth-button" type="button" data-oauth-provider="google">
+            <img src="assets/images/google-ios-2__1_-removebg-preview.png" alt="" />
+            Continue with Google
+          </button>
+          <button class="oauth-button" type="button" data-oauth-provider="github">
+            <img src="assets/images/github-removebg-preview.png" alt="" />
+            Continue with GitHub
+          </button>
+        </div>
+      </section>
+    </div>
+    <script src="/runtime-config.js" defer></script>
+    <script src="assets/vendor/js-yaml.min.js" defer></script>
+    <script src="app.js" defer></script>
+    <script src="backend.js" defer></script>
+    <footer class="site-footer section-wrap">
+      <div>
+        <a class="brand footer-brand" href="index.html" aria-label="APIDesk home"><img class="brand-logo" src="assets/brand/___2_-removebg-preview.png" alt="APIDesk logo" /><span>api<span class="brand-light">desk</span></span></a>
+        <div class="footer-copy">A browser based API workspace.</div>
+      </div>
+      <div>
+        <nav aria-label="Footer navigation">
+          <a href="index.html">Home</a>
+          <a href="docs.html">Docs</a>
+          <a href="faq.html">FAQ</a>
+          <a href="api-tester.html">Workspace</a>
+        </nav>
+        <div class="legal-links"><a href="privacy-policy.html">Privacy Policy</a><a href="terms-of-service.html">Terms of Service</a></div>
+      </div>
+      <div class="footer-contact">
+        <div class="footer-label">Contact us</div>
+        <a href="mailto:sirkomilan570@gmail.com">sirkomilan570@gmail.com</a>
+        <span>Discord: milanassist</span>
+      </div>
+    </footer>
+  </body>
+</html>

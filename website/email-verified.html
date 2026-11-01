@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta name="robots" content="noindex, nofollow" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#101012" />
+    <meta name="description" content="Your APIDesk email verification was successful." />
+    <title>Email Verified - APIDesk</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #101012;
+        --panel: #19191d;
+        --line: #303036;
+        --text: #f4f4f5;
+        --muted: #a2a2ad;
+        --green: #4bd4a0;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+        color: var(--text);
+        background:
+          radial-gradient(ellipse at 50% 38%, rgba(54, 120, 100, 0.14), transparent 43%),
+          var(--bg);
+        font-family: "Manrope", system-ui, sans-serif;
+      }
+
+      .verification-card {
+        width: min(100%, 470px);
+        padding: 38px;
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        background: linear-gradient(145deg, rgba(31, 31, 36, 0.98), rgba(22, 22, 26, 0.98));
+        box-shadow: 0 28px 90px rgba(0, 0, 0, 0.42);
+        text-align: center;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 38px;
+        color: var(--text);
+        font-size: 18px;
+        font-weight: 800;
+        letter-spacing: -0.7px;
+        text-decoration: none;
+      }
+
+      .brand img { width: 30px; height: 30px; object-fit: contain; }
+      .brand-light { color: #a7a7b1; }
+
+      .success-icon {
+        width: 68px;
+        height: 68px;
+        display: grid;
+        place-items: center;
+        margin: 0 auto 24px;
+        border: 1px solid rgba(75, 212, 160, 0.28);
+        border-radius: 50%;
+        background: rgba(75, 212, 160, 0.1);
+        color: var(--green);
+      }
+
+      .success-icon svg { width: 31px; height: 31px; }
+
+      .eyebrow {
+        margin: 0 0 10px;
+        color: var(--green);
+        font-family: "DM Mono", monospace;
+        font-size: 11px;
+        letter-spacing: 1.7px;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(27px, 7vw, 34px);
+        font-weight: 800;
+        letter-spacing: -1.5px;
+        line-height: 1.15;
+      }
+
+      .message {
+        margin: 14px 0 28px;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.7;
+      }
+
+      @media (max-width: 520px) {
+        .verification-card { padding: 30px 22px; }
+        .brand { margin-bottom: 32px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="verification-card">
+      <div class="brand" aria-label="APIDesk">
+        <img src="assets/brand/___2_-removebg-preview.png" alt="" />
+        <span>api<span class="brand-light">desk</span></span>
+      </div>
+
+      <div class="success-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="m5 12.5 4.2 4.2L19 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </div>
+
+      <p class="eyebrow">Email verification</p>
+      <h1>Verification successful</h1>
+      <p class="message">Your email address has been verified successfully. You can close this page and return to APIDesk.</p>
+    </main>
+  </body>
+</html>
