@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/images/banner.png" alt="API Desk - Test your APIs in seconds" width="720">
+<img src="website/assets/brand/___2_-removebg-preview.png" alt="API Desk - Test your APIs in seconds" width="200">
 
 # API Desk
 
@@ -8,24 +8,26 @@
 
 Build, send and save HTTP requests. Organise them in collections, share variables and headers across a whole collection, and read every response at a glance. No installation needed.
 
-[![CI](https://github.com/YOUR_USERNAME/api-desk/actions/workflows/ci.yml/badge.svg)](https://github.com/YOUR_USERNAME/api-desk/actions)
+[![CI](https://github.com/MilanSirko/api-desk/actions/workflows/ci.yml/badge.svg)](https://github.com/MilanSirko/api-desk/actions)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](CONTRIBUTING.md)
 [![Python](https://img.shields.io/badge/python-3.11-blue)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/backend-FastAPI-009688)](https://fastapi.tiangolo.com/)
 [![Supabase](https://img.shields.io/badge/database-Supabase-3ECF8E)](https://supabase.com/)
-[![Website](https://img.shields.io/badge/website-live-brightgreen)](https://YOUR-DOMAIN.com)
+[![Website](https://img.shields.io/badge/website-live-brightgreen)](https://api-desk-website.vercel.app/)
 
-[Live app](https://YOUR-DOMAIN.com) ·
-[Docs](https://YOUR-DOMAIN.com/docs) ·
-[Report a bug](https://github.com/YOUR_USERNAME/api-desk/issues/new) ·
-[Request a feature](https://github.com/YOUR_USERNAME/api-desk/issues/new)
+[Live app](https://api-desk-website.vercel.app/) ·
+[Docs](https://api-desk-website.vercel.app/docs.html) ·
+[Report a bug](https://github.com/MilanSirko/api-desk/issues/new) ·
+[Request a feature](https://github.com/MilanSirko/api-desk/issues/new)
 
 </div>
 
 ---
 
-![API Desk workspace](docs/images/workspace.png)
+<p align="center">
+  <img src="website/assets/images/workspace.png" alt="API Desk workspace" width="900">
+</p>
 
 ## Why API Desk?
 
@@ -36,50 +38,92 @@ Build, send and save HTTP requests. Organise them in collections, share variable
 - **Open source and self-hostable.** Read the code, run your own copy, contribute.
 - **Privacy-minded.** Authentication secrets are not saved with your requests.
 
-## Screenshots
+## Send your first request
 
-<table>
-  <tr>
-    <td width="50%"><img src="docs/images/collections.png" alt="Collections and folders"><br><sub>Collections, folders and saved requests</sub></td>
-    <td width="50%"><img src="docs/images/response-stats.png" alt="Response stats"><br><sub>Response stats: status, timing, size and structure</sub></td>
-  </tr>
-  <tr>
-    <td width="50%"><img src="docs/images/collection-settings.png" alt="Collection settings"><br><sub>Shared variables, headers and request settings</sub></td>
-    <td width="50%"><img src="docs/images/request-settings.png" alt="Request settings"><br><sub>Timeout, retries, redirects and response size limit</sub></td>
-  </tr>
-</table>
+1. Open the workspace.
+2. Pick a method and enter a URL, for example `https://jsonplaceholder.typicode.com/todos/1`.
+3. Press **Send** and read the response.
+
+<p align="center">
+  <img src="website/assets/images/first-request.png" alt="Sending a first request" width="100%">
+</p>
 
 ## Features
 
 ### Build requests
+
 - Methods: `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `HEAD`, `OPTIONS`
 - Query parameters and headers as tables, with rows you can switch on and off
 - Body types: JSON, URL-encoded, raw text and GraphQL
 - Authentication: Bearer token, Basic and API key
 - Request settings: timeout, retries with a delay, redirect following and a maximum response size
 
+<table>
+  <tr>
+    <td width="50%"><img src="website/assets/images/methods.png" alt="HTTP methods" width="100%"><br><sub>Every common HTTP method</sub></td>
+    <td width="50%"><img src="website/assets/images/query.png" alt="Query parameters" width="100%"><br><sub>Query parameters as a table</sub></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="website/assets/images/headers.png" alt="Headers" width="100%"><br><sub>Headers you can switch on and off</sub></td>
+    <td width="50%"><img src="website/assets/images/requestbody.png" alt="Request body" width="100%"><br><sub>JSON, URL-encoded, raw and GraphQL bodies</sub></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="website/assets/images/auth.png" alt="Authentication" width="100%"><br><sub>Bearer, Basic and API key authentication</sub></td>
+    <td width="50%"><img src="website/assets/images/settings%20request.png" alt="Request settings" width="100%"><br><sub>Timeout, retries, redirects and response size limit</sub></td>
+  </tr>
+</table>
+
 ### Read responses
+
 - Formatted JSON and raw body
 - Response headers and cookies
 - **Stats** tab with status, response time, size and JSON structure
 - **Logs** tab with a terminal view of every request you sent
 
+<table>
+  <tr>
+    <td width="50%"><img src="website/assets/images/responsebody.png" alt="Response body" width="100%"><br><sub>Body: formatted JSON</sub></td>
+    <td width="50%"><img src="website/assets/images/responseheaders.png" alt="Response headers" width="100%"><br><sub>Headers: every response header</sub></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="website/assets/images/responsestats.png" alt="Response stats" width="100%"><br><sub>Stats: status, timing, size and structure</sub></td>
+    <td width="50%"><img src="website/assets/images/responselogs.png" alt="Request logs" width="100%"><br><sub>Logs: a terminal view of every request</sub></td>
+  </tr>
+</table>
+
 ### Organise
+
 - Collections and folders
 - Save a request, save it to a folder, copy it into a collection
 - Export and import
 
 ### Share settings across a collection
+
 - Variables, used as `{{variable_name}}` in URLs, params, headers and bodies
 - Shared headers
 - Shared authorization
 - Shared request settings
 - A request's own value always wins over the collection's
 
-### Accounts
+<table>
+  <tr>
+    <td width="50%" align="center"><img src="website/assets/images/collcetion%20vs%20folder.png" alt="Collections and folders" height="420"><br><sub>Collections, folders and saved requests</sub></td>
+    <td width="50%" align="center"><img src="website/assets/images/shared.png" alt="Shared collection settings" height="420"><br><sub>Shared variables, headers and request settings</sub></td>
+  </tr>
+</table>
+
+### Accounts and your data
+
 - Email and password sign-up with email confirmation
 - Sign in with Google or GitHub
 - Delete your account and all of your data at any time
+
+<table>
+  <tr>
+    <td width="50%" align="center"><img src="website/assets/images/deleteaccount.png" alt="Delete account" width="100%"><br><sub>Delete your account and all of your data</sub></td>
+    <td width="50%" align="center"><img src="website/assets/images/exportimport.png" alt="Export and import" width="100%"><br><sub>Export and import your collections</sub></td>
+  </tr>
+</table>
 
 ## How it works
 
@@ -106,7 +150,7 @@ The frontend is a static site. The backend authenticates the user with Supabase,
 
 ### Use the hosted version
 
-Open **[YOUR-DOMAIN.com](https://YOUR-DOMAIN.com)**, sign up and go to the workspace.
+Open **[API Desk](https://api-desk-website.vercel.app/index.html)**, sign up and go to the workspace.
 
 ### Run it yourself
 
@@ -170,7 +214,8 @@ api-desk/
 ├── frontend/           static site: landing page and workspace
 ├── supabase/
 │   └── migrations/     database schema, policies, limits
-├── docs/               documentation and images
+├── docs/               documentation
+├── website/assets/     brand files and screenshots
 ├── CONTRIBUTING.md
 ├── SECURITY.md
 └── LICENSE
