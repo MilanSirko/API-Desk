@@ -222,7 +222,11 @@ async def sendrequest(request: Request, body: Sendrequest):
 @limiter.limit('10/minute')
 async def register(request: Request, body: User):
     try:
-        supabase.auth.sign_up({'email': body.email, 'password': body.password})
+        supabase.auth.sign_up({
+            'email': body.email,
+            'password': body.password,
+            'options': {'email_redirect_to': f'{FRONTEND_URL}/email-verified.html'},
+        })
         return {'message': 'Check your inbox to confim!'}
     except Exception as e:
         print(str(e))
@@ -275,7 +279,7 @@ async def oauth(request: Request, provider: Literal['google', 'github']):
 
 @app.get('/api/auth/callback')
 @limiter.limit('10/minute')
-async def callback(request: Request, code: str):
+async def callback(request: Request, code: str | None = None):
     fall=RedirectResponse(f"{FRONTEND_URL}/api-tester.html?auth_error=1", status_code=303)
     if not code:
         return fall
