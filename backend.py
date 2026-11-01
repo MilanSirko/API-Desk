@@ -22,6 +22,8 @@ BACKEND_URL = os.getenv('BACKEND_URL', '').rstrip('/')
 FRONTEND_URL = os.getenv('FRONTEND_URL', '').rstrip('/')
 if not BACKEND_URL or not FRONTEND_URL:
     raise RuntimeError('BACKEND_URL and FRONTEND_URL must be set in the environment.')
+OAUTH_CALLBACK_URL = f'{BACKEND_URL}/api/auth/callback'
+WORKSPACE_URL = f'{FRONTEND_URL}/api-tester.html'
 PROJECT_ROOT = Path(__file__).resolve().parent
 WEBSITE_ROOT = PROJECT_ROOT / 'website'
 ASSET_ROOT = PROJECT_ROOT / 'assets'
@@ -274,20 +276,26 @@ async def getuser(cred: HTTPAuthorizationCredentials | None=Depends(bearer)):
 @app.get('/api/auth/oauth/{provider}')
 @limiter.limit('10/minute')
 async def oauth(request: Request, provider: Literal['google', 'github']):
-    response=supabase.auth.sign_in_with_oauth({'provider': provider, 'options': {'redirect_to': f'{BACKEND_URL}/api/auth/callback'}})
+    response=supabase.auth.sign_in_with_oauth({
+        'provider': provider,
+        'options': {'redirect_to': OAUTH_CALLBACK_URL},
+    })
     return RedirectResponse(response.url)
 
 @app.get('/api/auth/callback')
 @limiter.limit('10/minute')
 async def callback(request: Request, code: str | None = None):
-    fall=RedirectResponse(f"{FRONTEND_URL}/api-tester.html?auth_error=1", status_code=303)
+    fall=RedirectResponse(f'{WORKSPACE_URL}?auth_error=1', status_code=303)
     if not code:
         return fall
     try:
         out=supabase.auth.exchange_code_for_session({'auth_code': code})
+        session = out.session
+        if not session or not session.access_token or not session.refresh_token:
+            return fall
     except Exception:
         return fall
-    return RedirectResponse(f'{FRONTEND_URL}/api-tester.html#access_token={out.session.access_token}&refresh_token={out.session.refresh_token}',
+    return RedirectResponse(f'{WORKSPACE_URL}#access_token={session.access_token}&refresh_token={session.refresh_token}',
         status_code=303)
 
 @app.get('/api/folders', status_code=200)
