@@ -225,7 +225,7 @@ async def sendrequest(request: Request, body: Sendrequest):
 
 @app.post('/api/auth/register')
 @limiter.limit('10/minute')
-async def register(request: Request, body: User):
+def register(request: Request, body: User):
     try:
         supabase.auth.sign_up({
             'email': body.email,
@@ -239,7 +239,7 @@ async def register(request: Request, body: User):
 
 @app.post('/api/auth/login')
 @limiter.limit('10/minute')
-async def login(request: Request, body: User):
+def login(request: Request, body: User):
     try:
         response=supabase.auth.sign_in_with_password({'email': body.email, 'password': body.password})
         return {'accestoken': response.session.access_token, 'tefreshtoken': response.session.refresh_token}
@@ -248,7 +248,7 @@ async def login(request: Request, body: User):
 
 @app.post('/api/auth/logout')
 @limiter.limit('10/minute')
-async def logout(request: Request, body: Refreshtoken, cred: HTTPAuthorizationCredentials | None=Depends(bearer)):
+def logout(request: Request, body: Refreshtoken, cred: HTTPAuthorizationCredentials | None=Depends(bearer)):
     try:
         supabase.auth.set_session(cred.credentials, body.refreshtoken)
         supabase.auth.sign_out({'scope': 'local'})
@@ -258,14 +258,14 @@ async def logout(request: Request, body: Refreshtoken, cred: HTTPAuthorizationCr
 
 @app.post('/api/auth/refresh')
 @limiter.limit('10/minute')
-async def refresh(request: Request, body: Refreshtoken):
+def refresh(request: Request, body: Refreshtoken):
     try:
         response=supabase.auth.refresh_session(body.refreshtoken).session
     except Exception:
         raise HTTPException(status_code=401, detail="Session expired")
     return {'accestoken': response.access_token, 'resfreshtoken': response.refresh_token}
 
-async def getuser(cred: HTTPAuthorizationCredentials | None=Depends(bearer)):
+def getuser(cred: HTTPAuthorizationCredentials | None=Depends(bearer)):
     try:
         if not cred:
             raise HTTPException(status_code=401, detail="Not logged in")
@@ -278,7 +278,7 @@ async def getuser(cred: HTTPAuthorizationCredentials | None=Depends(bearer)):
 
 @app.get('/api/auth/oauth/{provider}')
 @limiter.limit('10/minute')
-async def oauth(request: Request, provider: Literal['google', 'github']):
+def oauth(request: Request, provider: Literal['google', 'github']):
     response=supabase.auth.sign_in_with_oauth({
         'provider': provider,
         'options': {'redirect_to': OAUTH_CALLBACK_URL},
@@ -287,7 +287,7 @@ async def oauth(request: Request, provider: Literal['google', 'github']):
 
 @app.get('/api/auth/callback')
 @limiter.limit('10/minute')
-async def callback(request: Request, code: str | None = None):
+def callback(request: Request, code: str | None = None):
     fall=RedirectResponse(f'{WORKSPACE_URL}?auth_error=1', status_code=303)
     if not code:
         return fall
@@ -303,7 +303,7 @@ async def callback(request: Request, code: str | None = None):
 
 @app.get('/api/folders', status_code=200)
 @limiter.limit('50/minute')
-async def getfolders(request: Request, user=Depends(getuser)):
+def getfolders(request: Request, user=Depends(getuser)):
     userid=user['id']
     try:
         response=supabase.table('apifolders').select('*').eq('userid', userid).execute()
@@ -315,7 +315,7 @@ async def getfolders(request: Request, user=Depends(getuser)):
 
 @app.post('/api/folders/add', status_code=201)
 @limiter.limit('50/minute')
-async def addfolder(request: Request, body: Newfolder, user=Depends(getuser)):
+def addfolder(request: Request, body: Newfolder, user=Depends(getuser)):
     userid=user['id']
     try:
         response=supabase.table('apifolders').insert({'name': body.name, 'userid': userid}).execute()
@@ -327,7 +327,7 @@ async def addfolder(request: Request, body: Newfolder, user=Depends(getuser)):
 
 @app.patch('/api/folders/edit/{id}', status_code=204)
 @limiter.limit('50/minute')
-async def editname(request: Request, body: Editname, id: str, user=Depends(getuser)):
+def editname(request: Request, body: Editname, id: str, user=Depends(getuser)):
     userid=user['id']
     try:
         response=supabase.table('apifolders').update({'name': body.name}).eq('id', id).eq('userid', userid).execute()
@@ -338,7 +338,7 @@ async def editname(request: Request, body: Editname, id: str, user=Depends(getus
 
 @app.delete('/api/folders/delete/{id}', status_code=204)
 @limiter.limit('50/minute')
-async def deleteforder(request: Request, id: str, user=Depends(getuser)):
+def deleteforder(request: Request, id: str, user=Depends(getuser)):
     userid=user['id']
     try:
         response=supabase.table('apifolders').delete().eq('id', id).eq('userid', userid).execute()
@@ -349,7 +349,7 @@ async def deleteforder(request: Request, id: str, user=Depends(getuser)):
 
 @app.post('/api/folders/addrequest/{folderid}', status_code=200)
 @limiter.limit('50/minute')
-async def addrequesttofolder(request: Request, folderid: str, body: Sendrequest, user=Depends(getuser)):
+def addrequesttofolder(request: Request, folderid: str, body: Sendrequest, user=Depends(getuser)):
     userid=user['id']
     try:
         insertdata={
@@ -372,7 +372,7 @@ async def addrequesttofolder(request: Request, folderid: str, body: Sendrequest,
 
 @app.get('/api/requests', status_code=200)
 @limiter.limit('50/minute')
-async def getallrequest(request: Request,folderid: Optional[str]=None,collectionid: Optional[str] = None, user=Depends(getuser)):
+def getallrequest(request: Request,folderid: Optional[str]=None,collectionid: Optional[str] = None, user=Depends(getuser)):
     userid=user['id']
     try:
         response=supabase.table('requests').select('*').eq('userid', userid)
@@ -395,7 +395,7 @@ async def getallrequest(request: Request,folderid: Optional[str]=None,collection
 
 @app.post('/api/request/add', status_code=201)
 @limiter.limit('50/minute')
-async def saverequest(request: Request,body: Sendrequest ,user=Depends(getuser)):
+def saverequest(request: Request,body: Sendrequest ,user=Depends(getuser)):
     userid=user['id']
     try:
         insertdata={
@@ -419,7 +419,7 @@ async def saverequest(request: Request,body: Sendrequest ,user=Depends(getuser))
 
 @app.patch('/api/request/rename/{requestid}', status_code=204)
 @limiter.limit('50/minute')
-async def renamerequest(request: Request, requestid: str,body: Editname, user=Depends(getuser)):
+def renamerequest(request: Request, requestid: str,body: Editname, user=Depends(getuser)):
     userid=user['id']
     try:
         response=supabase.table('requests').update({'name': body.name}).eq('userid', userid).eq('id', requestid).execute()
@@ -432,7 +432,7 @@ async def renamerequest(request: Request, requestid: str,body: Editname, user=De
         raise HTTPException(status_code=500, detail="Server error")
 
 @app.delete('/api/request/delete/{requestid}', status_code=204)
-async def deleterequest(request: Request, requestid: str, user=Depends(getuser)):
+def deleterequest(request: Request, requestid: str, user=Depends(getuser)):
     userid=user['id']
     try:
         supabase.table('requests').delete().eq('userid', userid).eq('id', requestid).execute()
@@ -441,7 +441,7 @@ async def deleterequest(request: Request, requestid: str, user=Depends(getuser))
 
 @app.get('/api/collections', status_code=200)
 @limiter.limit('50/minute')
-async def getallcollections(request: Request, user=Depends(getuser)):
+def getallcollections(request: Request, user=Depends(getuser)):
     userid=user['id']
     try:
         response=supabase.table('collections').select('*').eq('userid', userid).execute()
@@ -453,7 +453,7 @@ async def getallcollections(request: Request, user=Depends(getuser)):
 
 @app.post("/api/addcollection", status_code=201)
 @limiter.limit('50/minute')
-async def addcollections(
+def addcollections(
     request: Request,
     body: CollectionIn,
     user=Depends(getuser),
@@ -498,7 +498,7 @@ async def addcollections(
 
 @app.delete('/api/collections/delete/{id}', status_code=204)
 @limiter.limit('50/minute')
-async def deletecollection(request: Request, id: str, user=Depends(getuser)):
+def deletecollection(request: Request, id: str, user=Depends(getuser)):
     userid=user["id"]
     try:
         response=supabase.table('collections').delete().eq('userid', userid).eq('id', id).execute()
@@ -510,7 +510,7 @@ async def deletecollection(request: Request, id: str, user=Depends(getuser)):
 
 @app.patch('/api/collections/update={id}', status_code=204)
 @limiter.limit('50/minute')
-async def update(request: Request, id: str, new: CollectionIn, user=Depends(getuser)):
+def update(request: Request, id: str, new: CollectionIn, user=Depends(getuser)):
     userid=user["id"]
     newdates={
         "userid": userid,
@@ -531,7 +531,7 @@ async def update(request: Request, id: str, new: CollectionIn, user=Depends(getu
 
 @app.get('/api/user', status_code=200)
 @limiter.limit('50/minute')
-async def user(request: Request, user=Depends(getuser)):
+def user(request: Request, user=Depends(getuser)):
     try:
         return{
             'userid': user['id'],
@@ -543,7 +543,7 @@ async def user(request: Request, user=Depends(getuser)):
 
 @app.get('/api/user/logs', status_code=200)
 @limiter.limit('50/minute')
-async def getlogs(request: Request, user=Depends(getuser)):
+def getlogs(request: Request, user=Depends(getuser)):
     userid=user["id"]
     try:
         response=(
@@ -562,7 +562,7 @@ async def getlogs(request: Request, user=Depends(getuser)):
 
 @app.post('/api/user/logs/add', status_code=201)
 @limiter.limit('100/minute')
-async def addlogs(request: Request, body: Log, user=Depends(getuser)):
+def addlogs(request: Request, body: Log, user=Depends(getuser)):
     userid=user["id"]
     try:
         insertlog={
@@ -582,7 +582,7 @@ async def addlogs(request: Request, body: Log, user=Depends(getuser)):
 
 @app.delete('/api/users/delete', status_code=200)
 @limiter.limit('10/minute')
-async def deleteuser(request: Request, user=Depends(getuser)):
+def deleteuser(request: Request, user=Depends(getuser)):
     userid=user["id"]
     try:
         admin_supabase.auth.admin.delete_user(userid)
