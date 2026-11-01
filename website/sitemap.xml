@@ -1,69 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://www.apidesk.com/</loc>
+    <loc>https://api-desk-website.vercel.app/</loc>
   </url>
   <url>
-    <loc>https://www.apidesk.com/docs.html</loc>
+    <loc>https://api-desk-website.vercel.app/docs.html</loc>
   </url>
   <url>
-    <loc>https://www.apidesk.com/faq.html</loc>
+    <loc>https://api-desk-website.vercel.app/faq.html</loc>
   </url>
   <url>
-    <loc>https://www.apidesk.com/privacy-policy.html</loc>
+    <loc>https://api-desk-website.vercel.app/privacy-policy.html</loc>
   </url>
   <url>
-    <loc>https://www.apidesk.com/terms-of-service.html</loc>
+    <loc>https://api-desk-website.vercel.app/terms-of-service.html</loc>
   </url>
   <url>
-    <loc>https://www.apidesk.com/docs/account-and-security.html</loc>
+    <loc>https://api-desk-website.vercel.app/docs/account-and-security.html</loc>
   </url>
   <url>
-    <loc>https://www.apidesk.com/docs/auth.html</loc>
+    <loc>https://api-desk-website.vercel.app/docs/auth.html</loc>
   </url>
   <url>
-    <loc>https://www.apidesk.com/docs/body.html</loc>
+    <loc>https://api-desk-website.vercel.app/docs/body.html</loc>
   </url>
   <url>
-    <loc>https://www.apidesk.com/docs/cookies.html</loc>
+    <loc>https://api-desk-website.vercel.app/docs/cookies.html</loc>
   </url>
   <url>
-    <loc>https://www.apidesk.com/docs/headers.html</loc>
+    <loc>https://api-desk-website.vercel.app/docs/headers.html</loc>
   </url>
   <url>
-    <loc>https://www.apidesk.com/docs/logs.html</loc>
+    <loc>https://api-desk-website.vercel.app/docs/logs.html</loc>
   </url>
   <url>
-    <loc>https://www.apidesk.com/docs/methods.html</loc>
+    <loc>https://api-desk-website.vercel.app/docs/methods.html</loc>
   </url>
   <url>
-    <loc>https://www.apidesk.com/docs/params.html</loc>
+    <loc>https://api-desk-website.vercel.app/docs/params.html</loc>
   </url>
   <url>
-    <loc>https://www.apidesk.com/docs/response-body.html</loc>
+    <loc>https://api-desk-website.vercel.app/docs/response-body.html</loc>
   </url>
   <url>
-    <loc>https://www.apidesk.com/docs/response-headers.html</loc>
+    <loc>https://api-desk-website.vercel.app/docs/response-headers.html</loc>
   </url>
   <url>
-    <loc>https://www.apidesk.com/docs/settings.html</loc>
+    <loc>https://api-desk-website.vercel.app/docs/settings.html</loc>
   </url>
   <url>
-    <loc>https://www.apidesk.com/docs/stats.html</loc>
+    <loc>https://api-desk-website.vercel.app/docs/stats.html</loc>
   </url>
   <url>
-    <loc>https://www.apidesk.com/docs/collections/difference.html</loc>
+    <loc>https://api-desk-website.vercel.app/docs/collections/difference.html</loc>
   </url>
   <url>
-    <loc>https://www.apidesk.com/docs/collections/import-export.html</loc>
+    <loc>https://api-desk-website.vercel.app/docs/collections/import-export.html</loc>
   </url>
   <url>
-    <loc>https://www.apidesk.com/docs/collections/manage.html</loc>
+    <loc>https://api-desk-website.vercel.app/docs/collections/manage.html</loc>
   </url>
   <url>
-    <loc>https://www.apidesk.com/docs/collections/save-copy.html</loc>
+    <loc>https://api-desk-website.vercel.app/docs/collections/save-copy.html</loc>
   </url>
   <url>
-    <loc>https://www.apidesk.com/docs/collections/shared-settings.html</loc>
+    <loc>https://api-desk-website.vercel.app/docs/collections/shared-settings.html</loc>
   </url>
 </urlset>

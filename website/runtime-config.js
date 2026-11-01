@@ -1,4 +1,4 @@
-// Set this to the public Render service URL before deploying the static site to Vercel.
+// Public deployment endpoints. Keep these in sync with .env.
 window.APIDESK_CONFIG = Object.freeze({
-  backendUrl: "https://your-service.onrender.com",
+  backendUrl: "https://api-desk-r0vo.onrender.com",
 });
