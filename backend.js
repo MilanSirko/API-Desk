@@ -1227,4 +1227,11 @@ document.addEventListener("apidesk:collection-update", async (event) => {
   }
 });
 
+const initialAccessToken = sessionStorage.getItem("apidesk.accessToken");
+if (initialAccessToken) {
+  document.dispatchEvent(new CustomEvent("apidesk:session-ready", {
+    detail: { accessToken: initialAccessToken },
+  }));
+}
+
 
