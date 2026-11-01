@@ -29,7 +29,10 @@ WEBSITE_ROOT = PROJECT_ROOT / 'website'
 ASSET_ROOT = PROJECT_ROOT / 'assets'
 bearer=HTTPBearer(auto_error=False)
 app=FastAPI()
-supabase: Client=create_client(os.getenv('url'), os.getenv('service'))
+supabase_url = os.getenv('url')
+supabase_service_key = os.getenv('service')
+supabase: Client = create_client(supabase_url, supabase_service_key)
+admin_supabase: Client = create_client(supabase_url, supabase_service_key)
 app.add_middleware(CORSMiddleware, allow_credentials=True, allow_headers=['*'], allow_methods=['*'], allow_origins=[FRONTEND_URL])
 limiter=Limiter(key_func=get_remote_address)
 app.state.limiter=limiter
@@ -582,7 +585,7 @@ async def addlogs(request: Request, body: Log, user=Depends(getuser)):
 async def deleteuser(request: Request, user=Depends(getuser)):
     userid=user["id"]
     try:
-        supabase.auth.admin.delete_user(userid)
+        admin_supabase.auth.admin.delete_user(userid)
     except Exception as e:
         print(str(e))
         raise HTTPException(status_code=500, detail="Server error")
