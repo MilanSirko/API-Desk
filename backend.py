@@ -658,6 +658,6 @@ async def runtime_config():
 @app.get('/root')
 async def root(request: Request):
     try:
-        return {"Server are running"}
+        return {"status": "Server are running"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
