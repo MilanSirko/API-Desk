@@ -621,6 +621,19 @@ def deleteuser(request: Request, user=Depends(getuser)):
         print(str(e))
         raise HTTPException(status_code=500, detail="Server error")
 
+@app.get('/runtime-config.js', include_in_schema=False)
+async def runtime_config():
+    public_config = json.dumps({'backendUrl': BACKEND_URL})
+    return Response(
+        content=f'window.APIDESK_CONFIG = Object.freeze({public_config});',
+        media_type='application/javascript',
+        headers={'Cache-Control': 'no-store'},
+    )
+
+@app.get('/root')
+async def root(request: Request):
+    return {"status": "Server are running"}
+
 @app.get('/{asset_path:path}', include_in_schema=False)
 async def serve_frontend(asset_path: str = ''):
     relative_path = asset_path or 'index.html'
@@ -645,19 +658,3 @@ async def serve_frontend(asset_path: str = ''):
     ):
         raise HTTPException(status_code=404, detail='Not found')
     return FileResponse(file_path)
-
-@app.get('/runtime-config.js', include_in_schema=False)
-async def runtime_config():
-    public_config = json.dumps({'backendUrl': BACKEND_URL})
-    return Response(
-        content=f'window.APIDESK_CONFIG = Object.freeze({public_config});',
-        media_type='application/javascript',
-        headers={'Cache-Control': 'no-store'},
-    )
-
-@app.get('/root')
-async def root(request: Request):
-    try:
-        return {"status": "Server are running"}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
