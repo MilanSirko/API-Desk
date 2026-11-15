@@ -593,9 +593,9 @@ def addlogs(request: Request, body: Log, user=Depends(getuser)):
     try:
         insertlog={
             'userid': userid,
-            'endpoint': body.endpoint,
+            'endpoint': body.endpoint[:2000],
             'statuscode': body.statuscode,
-            'message': body.message
+            'message': body.message[:1000]
         }
         response=supabase.table('logs').insert(insertlog).execute()
         if not response.data:

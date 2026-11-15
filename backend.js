@@ -5,7 +5,87 @@ const sendButton = document.getElementById("send");
 let requestLogs = [];
 let requestLogsError = "";
 let refreshRequest = null;
+let pendingLogFlush = null;
 const API_COOKIE_JAR_KEY = "apidesk.apiCookieJar";
+const PENDING_REQUEST_LOGS_KEY = "apidesk.pendingRequestLogs";
+
+function readPendingRequestLogs() {
+  try {
+    const pending = JSON.parse(sessionStorage.getItem(PENDING_REQUEST_LOGS_KEY) || "[]");
+    return Array.isArray(pending) ? pending : [];
+  } catch {
+    return [];
+  }
+}
+
+function writePendingRequestLogs(pending) {
+  try {
+    sessionStorage.setItem(PENDING_REQUEST_LOGS_KEY, JSON.stringify(pending));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function enqueuePendingRequestLog(entry) {
+  const id = globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  const pending = [...readPendingRequestLogs(), { id, ...entry }].slice(-100);
+  return writePendingRequestLogs(pending) ? id : null;
+}
+
+function removePendingRequestLog(id) {
+  writePendingRequestLogs(readPendingRequestLogs().filter((entry) => entry.id !== id));
+}
+
+async function submitRequestLog(entry, accessToken) {
+  const response = await authorizedFetch(`${BACKEND_URL}/api/user/logs/add`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify({
+      endpoint: entry.endpoint,
+      statuscode: entry.statuscode,
+      message: entry.message,
+    }),
+  });
+  let data = {};
+  try { data = await response.json(); } catch { /* The error below covers an empty response. */ }
+  if (!response.ok) {
+    const detail = typeof data.detail === "string" ? data.detail : JSON.stringify(data.detail || data);
+    throw new Error(detail || "Could not save request log.");
+  }
+  return data;
+}
+
+async function flushPendingRequestLogs(accessToken) {
+  if (!accessToken) return;
+  if (pendingLogFlush) return pendingLogFlush;
+
+  pendingLogFlush = (async () => {
+    for (const entry of readPendingRequestLogs()) {
+      try {
+        const data = await submitRequestLog(entry, accessToken);
+        removePendingRequestLog(entry.id);
+        const localEntry = requestLogs.find((log) => log.pendingId === entry.id);
+        if (localEntry) {
+          Object.assign(localEntry, data);
+          delete localEntry.pendingId;
+        }
+      } catch {
+        break;
+      }
+    }
+    renderRequestLogs();
+  })();
+
+  try {
+    await pendingLogFlush;
+  } finally {
+    pendingLogFlush = null;
+  }
+}
 
 function readApiCookieJar() {
   try {
@@ -181,7 +261,11 @@ async function loadRequestLogs(accessToken = sessionStorage.getItem("apidesk.acc
     });
     const data = await response.json();
     if (!response.ok) throw new Error(data.detail || "Could not load request logs.");
-    requestLogs = Array.isArray(data) ? [...data] : [];
+    const pendingLogs = readPendingRequestLogs().map(({ id, ...entry }) => ({
+      ...entry,
+      pendingId: id,
+    }));
+    requestLogs = [...(Array.isArray(data) ? data : []), ...pendingLogs];
     requestLogs.sort((left, right) => {
       const leftDate = Date.parse(left.created || left.created_at || left.timestamp || "");
       const rightDate = Date.parse(right.created || right.created_at || right.timestamp || "");
@@ -207,31 +291,19 @@ async function recordRequestLog(entry) {
   renderRequestLogs();
 
   const accessToken = sessionStorage.getItem("apidesk.accessToken");
-  if (!accessToken) return;
+  if (!accessToken) {
+    localEntry.pendingId = enqueuePendingRequestLog(localEntry);
+    if (!localEntry.pendingId) toast("Could not keep this request log in the current browser session.");
+    return;
+  }
   try {
-    const response = await authorizedFetch(`${BACKEND_URL}/api/user/logs/add`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-      body: JSON.stringify({
-        endpoint: localEntry.endpoint,
-        statuscode: localEntry.statuscode,
-        message: localEntry.message,
-      }),
-    });
-    const data = await response.json();
-    if (!response.ok) {
-      const detail = typeof data.detail === "string" ? data.detail : JSON.stringify(data.detail || data);
-      localEntry.message += ` (log save failed: ${detail})`;
-      toast(`Could not save request log: ${detail}`);
-    } else if (data && typeof data === "object") {
-      Object.assign(localEntry, data);
-      localEntry.created ||= new Date().toISOString();
-    }
+    const data = await submitRequestLog(localEntry, accessToken);
+    Object.assign(localEntry, data);
+    localEntry.created ||= new Date().toISOString();
   } catch (error) {
     const message = friendlyErrorMessage(error);
+    localEntry.pendingId = enqueuePendingRequestLog(localEntry);
+    if (!localEntry.pendingId) toast("Could not keep this request log in the current browser session.");
     localEntry.message += ` (log save failed: ${message})`;
     toast(`Could not save request log: ${message}`);
   }
@@ -250,6 +322,7 @@ document.getElementById("responseContent").addEventListener("click", async (even
 
 document.addEventListener("apidesk:logs-view-open", async () => {
   try {
+    await flushPendingRequestLogs(sessionStorage.getItem("apidesk.accessToken"));
     await loadRequestLogs();
   } catch (error) {
     requestLogsError = friendlyErrorMessage(`Could not load request logs: ${error.message}`);
@@ -680,6 +753,7 @@ document.addEventListener("apidesk:account-delete", async (event) => {
 document.addEventListener("apidesk:session-ready", async (event) => {
   const { accessToken } = event.detail;
   const headers = { Authorization: `Bearer ${accessToken}` };
+  await flushPendingRequestLogs(accessToken);
   loadRequestLogs(accessToken).catch((error) => {
     requestLogsError = friendlyErrorMessage(`Could not load request logs: ${error.message}`);
     renderRequestLogs();
