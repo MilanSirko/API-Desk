@@ -1,6 +1,7 @@
 import os
 import time
 import json
+import redis
 from pathlib import Path
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Request, Depends
@@ -20,6 +21,7 @@ from http.cookiejar import Cookie, DefaultCookiePolicy
 load_dotenv()
 BACKEND_URL = os.getenv('BACKEND_URL', '').rstrip('/')
 FRONTEND_URL = os.getenv('FRONTEND_URL', '').rstrip('/')
+REDIS_URL=os.getenv("redisurl")
 if not BACKEND_URL or not FRONTEND_URL:
     raise RuntimeError('BACKEND_URL and FRONTEND_URL must be set in the environment.')
 OAUTH_CALLBACK_URL = f'{BACKEND_URL}/api/auth/callback'
@@ -37,6 +39,15 @@ app.add_middleware(CORSMiddleware, allow_credentials=True, allow_headers=['*'], 
 limiter=Limiter(key_func=get_remote_address)
 app.state.limiter=limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+try:
+    rediscient = (
+        redis.from_url(REDIS_URL, decode_responses=True, socket_connect_timeout=2)
+        if REDIS_URL
+        else None
+    )
+except (TypeError, ValueError):
+    rediscient = None
 
 class Sendrequest(BaseModel):
     method: str= 'GET'
@@ -545,6 +556,14 @@ def user(request: Request, user=Depends(getuser)):
 @limiter.limit('50/minute')
 def getlogs(request: Request, user=Depends(getuser)):
     userid=user["id"]
+    key=f"logs:{userid}"
+    if rediscient:
+        try:
+            cacheddata=rediscient.get(key)
+            if cacheddata:
+                return json.loads(cacheddata)
+        except Exception:
+            pass
     try:
         response=(
             supabase.table('logs')
@@ -554,7 +573,14 @@ def getlogs(request: Request, user=Depends(getuser)):
             .limit(50)
             .execute()
         )
-        return response.data or []
+        responsedata= response.data or []
+        if rediscient:
+            try:
+                rediscient.set(key, json.dumps(responsedata), ex=60)
+            except Exception:
+                pass
+        return responsedata
+
     except HTTPException:
         raise
     except Exception as e:
@@ -574,6 +600,11 @@ def addlogs(request: Request, body: Log, user=Depends(getuser)):
         response=supabase.table('logs').insert(insertlog).execute()
         if not response.data:
             raise HTTPException(status_code=400, detail='Database error')
+        if rediscient:
+            try:
+                rediscient.delete(f"logs:{userid}")
+            except Exception:
+                pass
         return response.data[0]
     except HTTPException:
         raise
@@ -589,23 +620,6 @@ def deleteuser(request: Request, user=Depends(getuser)):
     except Exception as e:
         print(str(e))
         raise HTTPException(status_code=500, detail="Server error")
-
-        
-@app.get('/root')
-async def root(request: Request):
-    try:
-        return {"Server are running"}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
-
-@app.get('/runtime-config.js', include_in_schema=False)
-async def runtime_config():
-    public_config = json.dumps({'backendUrl': BACKEND_URL})
-    return Response(
-        content=f'window.APIDESK_CONFIG = Object.freeze({public_config});',
-        media_type='application/javascript',
-        headers={'Cache-Control': 'no-store'},
-    )
 
 @app.get('/{asset_path:path}', include_in_schema=False)
 async def serve_frontend(asset_path: str = ''):
@@ -632,3 +646,18 @@ async def serve_frontend(asset_path: str = ''):
         raise HTTPException(status_code=404, detail='Not found')
     return FileResponse(file_path)
 
+@app.get('/runtime-config.js', include_in_schema=False)
+async def runtime_config():
+    public_config = json.dumps({'backendUrl': BACKEND_URL})
+    return Response(
+        content=f'window.APIDESK_CONFIG = Object.freeze({public_config});',
+        media_type='application/javascript',
+        headers={'Cache-Control': 'no-store'},
+    )
+
+@app.get('/root')
+async def root(request: Request):
+    try:
+        return {"Server are running"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
